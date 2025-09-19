@@ -2,26 +2,25 @@
 
 namespace Webkul\Core\Criteria;
 
-use Prettus\Repository\Contracts\CriteriaInterface;
-use Prettus\Repository\Contracts\RepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 
-class GroupScope implements CriteriaInterface
+class GroupScope implements Scope
 {
     /**
-     * Apply criteria in query repository
+     * Apply the scope to a given Eloquent query builder.
      *
-     * @param  mixed  $model
-     * @param  \Prettus\Repository\Contracts\RepositoryInterface  $repository
-     * @return mixed
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return void
      */
-    public function apply($model, RepositoryInterface $repository)
+    public function apply(Builder $builder, Model $model)
     {
         $user = auth()->guard('user')->user();
 
-        if ($user->view_permission === 'group') {
-            return $model->where('group_id', $user->group_id);
+        if ($user && $user->view_permission === 'group') {
+            $builder->where('group_id', $user->group_id);
         }
-
-        return $model;
     }
 }

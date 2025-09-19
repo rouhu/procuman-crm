@@ -7,8 +7,6 @@ use Webkul\Attribute\Traits\CustomAttribute;
 use Webkul\Contact\Contracts\Organization as OrganizationContract;
 use Webkul\User\Models\UserProxy;
 
-use Webkul\Core\Models\GroupScope;
-
 class Organization extends Model implements OrganizationContract
 {
     use CustomAttribute;
