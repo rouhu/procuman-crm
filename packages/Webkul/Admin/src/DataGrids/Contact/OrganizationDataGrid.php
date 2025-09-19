@@ -19,9 +19,9 @@ class OrganizationDataGrid extends DataGrid
     /**
      * Prepare query builder.
      */
-    public function prepareQueryBuilder()
+    public function prepareQueryBuilder(): Builder
     {
-        $queryBuilder = \Webkul\Contact\Models\Organization::query()
+        $queryBuilder = \Webkul\Contact\Models\Organization::query()->getQuery()
             ->addSelect(
                 'organizations.id',
                 'organizations.name',
