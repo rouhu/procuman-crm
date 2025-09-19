@@ -401,30 +401,23 @@
                                         @lang('admin::app.settings.users.index.create.group')
                                     </x-admin::form.control-group.label>
 
-                                    <v-field
-                                        name="groups[]"
-                                        label="@lang('admin::app.settings.users.index.create.group')"
-                                        multiple
-                                        v-model="user.groups"
+                                    <x-admin::form.control-group.control
+                                        type="select"
+                                        name="group_id"
                                         rules="required"
+                                        v-model="user.group_id"
+                                        :label="trans('admin::app.settings.users.index.create.group')"
                                     >
-                                        <select
-                                            name="groups[]"
-                                            class="flex min-h-[39px] w-full rounded-md border px-3 py-2 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400 dark:focus:border-gray-400"
-                                            :class="[errors['groups[]'] ? 'border !border-red-600 hover:border-red-600' : '']"
-                                            multiple
-                                            v-model="user.groups"
+                                        <option
+                                            v-for="group in groups"
+                                            :key="group.id"
+                                            :value="group.id"
                                         >
-                                            <option
-                                                v-for="group in groups"
-                                                :value="group.id"
-                                                :text="group.name"
-                                            >
-                                            </option>
-                                        </select>
-                                    </v-field>
+                                            @{{ group.name }}
+                                        </option>
+                                    </x-admin::form.control-group.control>
 
-                                    <x-admin::form.control-group.error name="groups[]" />
+                                    <x-admin::form.control-group.error control-name="group_id" />
                                 </x-admin::form.control-group>
                             </template>
 
@@ -537,7 +530,7 @@
 
                     openModal() {
                         this.user = {
-                            groups: [],
+                            group_id: null,
                         };
 
                         this.$refs.userUpdateAndCreateModal.toggle();
@@ -579,7 +572,7 @@
                             .then(response => {
                                 this.user = response.data.data;
 
-                                this.user.groups = this.user.groups.map(group => group.id);
+                                this.user.group_id = this.user.group?.id;
 
                                 this.$refs.userUpdateAndCreateModal.toggle();
                             })

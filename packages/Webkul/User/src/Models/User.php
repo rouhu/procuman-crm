@@ -24,6 +24,7 @@ class User extends Authenticatable implements UserContract
         'password',
         'api_token',
         'role_id',
+        'group_id',
         'status',
         'view_permission',
     ];
@@ -77,6 +78,14 @@ class User extends Authenticatable implements UserContract
     public function role()
     {
         return $this->belongsTo(RoleProxy::modelClass());
+    }
+
+    /**
+     * The group that the user belongs to.
+     */
+    public function group()
+    {
+        return $this->belongsTo(GroupProxy::modelClass());
     }
 
     /**

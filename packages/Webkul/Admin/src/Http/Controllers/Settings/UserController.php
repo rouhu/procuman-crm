@@ -76,7 +76,8 @@ class UserController extends Controller
 
         $admin = $this->userRepository->create($data);
 
-        $admin->groups()->sync($data['groups'] ?? []);
+        $admin->group_id = $data['group_id'] ?? null;
+        $admin->save();
 
         try {
             Mail::queue(new UserCreatedNotification($admin));
@@ -137,7 +138,8 @@ class UserController extends Controller
 
         $admin = $this->userRepository->update($data, $id);
 
-        $admin->groups()->sync($data['groups'] ?? []);
+        $admin->group_id = $data['group_id'] ?? null;
+        $admin->save();
 
         Event::dispatch('settings.user.update.after', $admin);
 

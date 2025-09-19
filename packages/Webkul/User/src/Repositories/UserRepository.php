@@ -35,10 +35,7 @@ class UserRepository extends Repository
     public function getCurrentUserGroupsUserIds()
     {
         $userIds = $this->scopeQuery(function ($query) {
-            return $query->select('users.*')
-                ->leftJoin('user_groups', 'users.id', '=', 'user_groups.user_id')
-                ->leftJoin('groups', 'user_groups.group_id', 'groups.id')
-                ->whereIn('groups.id', auth()->guard('user')->user()->groups()->pluck('id'));
+            return $query->where('group_id', auth()->guard('user')->user()->group_id);
         })->get()->pluck('id')->toArray();
 
         return $userIds;
