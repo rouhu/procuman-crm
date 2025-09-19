@@ -96,11 +96,6 @@ class LeadRepository extends Repository
                 ->where('leads.lead_pipeline_stage_id', $pipelineStageId)
                 ->when($createdAtRange, function ($query) use ($createdAtRange) {
                     return $query->whereBetween('leads.created_at', $createdAtRange);
-                })
-                ->where(function ($query) {
-                    if ($userIds = bouncer()->getAuthorizedUserIds()) {
-                        $query->whereIn('leads.user_id', $userIds);
-                    }
                 });
         });
     }
@@ -130,6 +125,8 @@ class LeadRepository extends Repository
         if (empty($data['expected_close_date'])) {
             $data['expected_close_date'] = null;
         }
+
+        $data['group_id'] = auth()->guard('user')->user()->group_id;
 
         $lead = parent::create(array_merge([
             'lead_pipeline_id'       => 1,

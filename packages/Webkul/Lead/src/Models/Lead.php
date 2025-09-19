@@ -22,6 +22,16 @@ class Lead extends Model implements LeadContract
     use CustomAttribute, LogsActivity;
 
     /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new \Webkul\Core\Criteria\GroupScope);
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -40,6 +50,7 @@ class Lead extends Model implements LeadContract
         'lead_type_id',
         'lead_pipeline_id',
         'lead_pipeline_stage_id',
+        'group_id',
     ];
 
     /**
@@ -67,6 +78,14 @@ class Lead extends Model implements LeadContract
     public function user(): BelongsTo
     {
         return $this->belongsTo(UserProxy::modelClass());
+    }
+
+    /**
+     * Get the group that owns the lead.
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(\Webkul\User\Models\GroupProxy::modelClass());
     }
 
     /**
