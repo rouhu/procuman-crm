@@ -19,9 +19,9 @@ class OrganizationDataGrid extends DataGrid
     /**
      * Prepare query builder.
      */
-    public function prepareQueryBuilder(): Builder
+    public function prepareQueryBuilder()
     {
-        return DB::table('organizations')
+        $queryBuilder = \Webkul\Contact\Models\Organization::query()
             ->addSelect(
                 'organizations.id',
                 'organizations.name',
@@ -29,13 +29,11 @@ class OrganizationDataGrid extends DataGrid
                 'organizations.created_at'
             );
 
-        if ($userIds = bouncer()->getAuthorizedUserIds()) {
-            $queryBuilder->whereIn('organizations.user_id', $userIds);
-        }
-
         $this->addFilter('id', 'organizations.id');
 
         $this->addFilter('organization', 'organizations.name');
+
+        return $queryBuilder;
     }
 
     /**
