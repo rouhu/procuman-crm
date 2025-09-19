@@ -54,6 +54,8 @@ class QuoteRepository extends Repository
      */
     public function create(array $data)
     {
+        $data['group_id'] = auth()->guard('user')->user()->group_id;
+
         $quote = parent::create($data);
 
         $this->attributeValueRepository->save(array_merge($data, [

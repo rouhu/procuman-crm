@@ -35,8 +35,10 @@ class QuoteDataGrid extends DataGrid
             ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
             ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id');
 
-        if ($userIds = bouncer()->getAuthorizedUserIds()) {
-            $queryBuilder->whereIn('quotes.user_id', $userIds);
+        $user = auth()->guard('user')->user();
+
+        if ($user && $user->view_permission === 'group') {
+            $queryBuilder->where('quotes.group_id', $user->group_id);
         }
 
         $this->addFilter('id', 'quotes.id');

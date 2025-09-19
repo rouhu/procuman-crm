@@ -40,6 +40,7 @@ class Quote extends Model implements QuoteContract
         'expired_at',
         'user_id',
         'person_id',
+        'group_id',
     ];
 
     /**
@@ -56,6 +57,14 @@ class Quote extends Model implements QuoteContract
     public function user()
     {
         return $this->belongsTo(UserProxy::modelClass());
+    }
+
+    /**
+     * Get the group that owns the quote.
+     */
+    public function group()
+    {
+        return $this->belongsTo(\Webkul\User\Models\GroupProxy::modelClass());
     }
 
     /**
