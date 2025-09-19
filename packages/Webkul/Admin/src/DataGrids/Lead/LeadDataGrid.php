@@ -4,7 +4,6 @@ namespace Webkul\Admin\DataGrids\Lead;
 
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use Webkul\Core\Criteria\GroupScope;
 use Webkul\DataGrid\DataGrid;
 use Webkul\Lead\Repositories\PipelineRepository;
 use Webkul\Lead\Repositories\SourceRepository;
@@ -49,11 +48,7 @@ class LeadDataGrid extends DataGrid
     {
         $tablePrefix = DB::getTablePrefix();
 
-        $query = \Webkul\Lead\Models\Lead::query();
-
-        (new GroupScope)->apply($query, $query->getModel());
-
-        $queryBuilder = $query->getQuery()
+        $queryBuilder = DB::table('leads')
             ->addSelect(
                 'leads.id',
                 'leads.title',
@@ -84,6 +79,12 @@ class LeadDataGrid extends DataGrid
             ->leftJoin('tags', 'tags.id', '=', 'lead_tags.tag_id')
             ->groupBy('leads.id')
             ->where('leads.lead_pipeline_id', $this->pipeline->id);
+
+        $user = auth()->guard('user')->user();
+
+        if ($user && $user->view_permission === 'group') {
+            $queryBuilder->where('leads.group_id', $user->group_id);
+        }
 
         if (! is_null(request()->input('rotten_lead.in'))) {
             $queryBuilder->havingRaw($tablePrefix.'rotten_lead = '.request()->input('rotten_lead.in'));

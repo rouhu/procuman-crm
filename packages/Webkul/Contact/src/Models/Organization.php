@@ -11,16 +11,6 @@ class Organization extends Model implements OrganizationContract
 {
     use CustomAttribute;
 
-    /**
-     * Boot the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new \Webkul\Core\Criteria\GroupScope);
-    }
-
     protected $casts = [
         'address' => 'array',
     ];

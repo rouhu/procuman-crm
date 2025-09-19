@@ -3,8 +3,8 @@
 namespace Webkul\Admin\DataGrids\Contact;
 
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 use Webkul\Contact\Repositories\PersonRepository;
-use Webkul\Core\Criteria\GroupScope;
 use Webkul\DataGrid\DataGrid;
 
 class OrganizationDataGrid extends DataGrid
@@ -21,17 +21,19 @@ class OrganizationDataGrid extends DataGrid
      */
     public function prepareQueryBuilder(): Builder
     {
-        $query = \Webkul\Contact\Models\Organization::query();
-
-        (new GroupScope)->apply($query, $query->getModel());
-
-        $queryBuilder = $query->getQuery()
+        $queryBuilder = DB::table('organizations')
             ->addSelect(
                 'organizations.id',
                 'organizations.name',
                 'organizations.address',
                 'organizations.created_at'
             );
+
+        $user = auth()->guard('user')->user();
+
+        if ($user && $user->view_permission === 'group') {
+            $queryBuilder->where('organizations.group_id', $user->group_id);
+        }
 
         $this->addFilter('id', 'organizations.id');
 

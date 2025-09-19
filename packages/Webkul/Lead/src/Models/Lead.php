@@ -22,16 +22,6 @@ class Lead extends Model implements LeadContract
     use CustomAttribute, LogsActivity;
 
     /**
-     * Boot the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new \Webkul\Core\Criteria\GroupScope);
-    }
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

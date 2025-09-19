@@ -32,8 +32,10 @@ class PersonDataGrid extends DataGrid
             )
             ->leftJoin('organizations', 'persons.organization_id', '=', 'organizations.id');
 
-        if ($userIds = bouncer()->getAuthorizedUserIds()) {
-            $queryBuilder->whereIn('persons.user_id', $userIds);
+        $user = auth()->guard('user')->user();
+
+        if ($user && $user->view_permission === 'group') {
+            $queryBuilder->where('persons.group_id', $user->group_id);
         }
 
         $this->addFilter('id', 'persons.id');

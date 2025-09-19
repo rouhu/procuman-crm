@@ -57,6 +57,7 @@ class Person extends Model implements PersonContract
         'user_id',
         'organization_id',
         'unique_id',
+        'group_id',
     ];
 
     /**
@@ -65,6 +66,14 @@ class Person extends Model implements PersonContract
     public function user(): BelongsTo
     {
         return $this->belongsTo(UserProxy::modelClass());
+    }
+
+    /**
+     * Get the group that owns the lead.
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(\Webkul\User\Models\GroupProxy::modelClass());
     }
 
     /**
